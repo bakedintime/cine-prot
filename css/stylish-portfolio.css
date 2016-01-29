@@ -12,8 +12,8 @@ body {
     height: 100%;
 }
 
-body {
-    font-family: "Source Sans Pro","Helvetica Neue",Helvetica,Arial,sans-serif;
+body, .ui.header, .ui.button {
+    font-family: "Raleway","Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
 .text-vertical-center {
@@ -130,8 +130,7 @@ hr.small {
 #menu-toggle {
     z-index: 1;
     position: fixed;
-    top: 0;
-    right: 0;
+    margin: 10px;
 }
 
 #sidebar-wrapper.active {
@@ -154,7 +153,7 @@ hr.small {
     display: table;
     position: relative;
     width: 100%;
-    height: 45%;
+    height: 415px;
     background: url(../img/movies-1.jpg) no-repeat center center scroll;
     -webkit-background-size: 100% 200%;
     -moz-background-size: 100% 200%;
