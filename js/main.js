@@ -1,5 +1,3 @@
-var headerIcon = 1;
-
 var interval = function(func, wait, times){
     var interv = function(w, t){
         return function(){
@@ -18,6 +16,8 @@ var interval = function(func, wait, times){
 
     setTimeout(interv, wait);
 };
+
+var votacionCard = $.templates("#votacion-card");
 
 // Closes the sidebar menu
 $("#menu-close").click(function(e) {
@@ -47,17 +47,33 @@ $(function() {
         }
     });*/
 
+    // render votaciones
+    var votaciones = [
+        {
+            fechaPelicula: '01/06/2016',
+            mensaje: 'Vota ya!',
+            open: true
+        },
+        {
+            fechaPelicula: '08/06/2016',
+            mensaje: 'Ya hay resultados',
+            open: false
+        }
+    ];
+    var rHtml = votacionCard.render(votaciones);
+    $('#votaciones-cards').html(rHtml);
+
     interval(function(){
         $('#header-icon').addClass('animated fadeOut');
+        var headerIcon = parseInt($('#header-icon').attr('src').split('-')[1].substr(4, 1), 10);
+        var currentIndex = ((headerIcon >= 4) ? 1 : headerIcon + 1);
         $('#header-icon').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
             $('#header-icon').removeClass('animated fadeOut');
-            var currentIcon = ((headerIcon => 4) ? 1 : headerIcon + 1);
-            headerIcon = currentIcon;
-            $('#header-icon').attr("src", "img/header-icon"+headerIcon+".png");
+            $('#header-icon').attr('src', 'img/header-icon'+currentIndex+'.png');
             $('#header-icon').addClass('animated fadeIn');
             $('#header-icon').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
                 $('#header-icon').removeClass('animated fadeIn');
             });
         });
-    }, 5000);
+    }, 3500);
 });
