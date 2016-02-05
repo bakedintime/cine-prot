@@ -1,5 +1,6 @@
 const CLASS_PROPUESTA = 'propuesta';
 const CLASS_VOTACION = 'votacion';
+const CLASS_PELICULA = 'pelicula';
 const INSTANCE_NAME = 'sparkling-bird-2973';
 
 var prefixAnimations = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
@@ -140,6 +141,10 @@ var getVotaciones = function(){
         console.log('se obtuvo votaciones', obj);
         votacionesLocalObject = obj;
     });
+    syncanoAccount.instance(INSTANCE_NAME).class(CLASS_PELICULA).dataobject().list(function(obj){
+        console.log('se obtuvo votaciones', obj);
+        peliculasLocalObject = obj;
+    });
 };
 
 var getVotacion = function(idVotacion){
@@ -184,6 +189,13 @@ var getVotacion = function(idVotacion){
         open: true
     };*/
     var votacion = $.grep(votacionesLocalObject, function(e){ return e.idVotacion == idVotacion; });
+    var peliculas = votacion.opciones.split(',');
+    var opciones = [];
+    $.each(peliculas, function(i,v){
+        var opcion = $.grep(votacionesLocalObject, function(e){ return e.idPelicula == v; });
+        opciones.push(opcion);
+    });
+    votacion.opciones = opciones;
     return votacion;
 };
 
