@@ -1,17 +1,35 @@
+const CLASS_PROPUESTA = 'propuesta';
+const CLASS_VOTACION = 'votacion';
+
 var prefixAnimations = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
 var votacionCard = $.templates("#votacion-card");
 var detalleVotacionCard = $.templates("#detalle-votacion-card");
+var token;
+var syncanoAccount;
 var basil = new window.Basil({
     namespace: 'cinetir',
     storages: ['cookie', 'local'],
     expireDays: 800
 });
 
+
 var initHello = function(){
     hello.init({
         google: '123591056896-tm74unsnde8elshnokbcvb6ujhblj8h7.apps.googleusercontent.com'
     }, {
         redirect_uri: 'templates/redirect.html'
+    });
+};
+
+var connectSyncano = function(){
+    syncanoAccount = new Syncano({
+        accountKey: "bba54d3eafd7649c200e2a0867a5837de78adc7a"
+    });
+}
+
+var saveObject = function(className, doc){
+    syncanoAccount.instance('sparkling-bird-2973').class(className).dataobject().add(doc, function(){
+        console.log('added object');
     });
 };
 
@@ -33,6 +51,12 @@ var checkAuthentication = function(){
     }else{
         return false;
     }
+};
+
+var login = function(){
+    hello('google').login(function(){
+        token = hello('google').getAuthResponse().access_token;
+    });
 };
 
 var interval = function(func, wait, times){
@@ -66,11 +90,13 @@ var hideMainView = function(){
             // if user not logged in dimm content and show log in with 
             // google 
             if (!checkAuthentication()){
-                $('#detalle').addClass('blurring');
-                $('#detalle-votacion-cards').addClass('dimmer inverted');
+                $('#dimmer').dimmer('setting', {
+                    closable: false
+                });
+                $('#detalle-votacion-cards').dimmer('show');
             }else{
-                $('#detalle').removeClass('blurring');
-                $('#detalle-votacion-cards').removeClass('dimmer inverted');
+                //$('#detalle').removeClass('blurring');
+                //$('#detalle-votacion-cards').removeClass('dimmer inverted');
             }
         });
     });
@@ -94,8 +120,16 @@ var vote = function(idPelicula){
     var btn = this;
     $('.ui.toggle.button.active').text('Votar');
     $('.ui.toggle.button.active').removeClass('active');
-    $(this).addClass('active');
-    $('.send-vote-action').attr('data-selected-id', idPelicula);
+    if (!checkAuthentication()){
+        $('#dimmer').dimmer('setting', {
+            closable: false
+        });
+        $('#detalle-votacion-cards').dimmer('show');
+        return false;
+    }else{
+        $(this).addClass('active');
+        $('.send-vote-action').attr('data-selected-id', idPelicula);
+    }
     return false;
 };
 
@@ -157,20 +191,29 @@ $("#menu-toggle").click(function(e) {
 
 // Scrolls to the selected menu item on the page
 $(function() {
+    // init libraries
     initHello();
     hello.on('auth.login', function(auth) {
 
-        // Call user information, for the given network
-        hello(auth.network).api('/me').then(function(r) {
-            // Inject it into the container
-            console.log('result from oauth callback', auth, r);
-            basil.set('auth-id', {
-                name: r.name,
-                thumbnail: r.thumbnail,
-                votedFilms: []
+        if (!checkAuthentication()){
+            // Call user information, for the given network
+            hello(auth.network).api('/me').then(function(r) {
+                // Inject it into the container
+                console.log('result from oauth callback', auth, r);
+                basil.set('auth-id', {
+                    name: r.name,
+                    thumbnail: r.thumbnail,
+                    id: r.id,
+                    votedFilms: []
+                });
             });
-        });
+        }
+
     });
+
+    connectSyncano();
+
+    // declare actions
     $('body').delegate('.vote-action', 'click', function(){
         var id = $(this).attr("data-index");
         var votacion = getVotacion(id);
@@ -206,6 +249,12 @@ $(function() {
         var idPelicula = $(btn).attr('data-selected-id');
         if (idPelicula == undefined){
             showNotification('information', 'Selecciona una de las películas!', 'topCenter');
+        }else if (!checkAuthentication()){
+            $('#dimmer').dimmer('setting', {
+                closable: false
+            });
+            $('#detalle-votacion-cards').dimmer('show');
+            return false;
         }
         $(btn).addClass('loading');
         console.log(idPelicula);
@@ -213,6 +262,29 @@ $(function() {
             $(btn).removeClass('loading');
             showNotification('success', 'Tu voto ya ha sido tomado en cuenta!', 'topCenter');
         }, 2000);
+        return false;
+    });
+
+    $('body').delegate('.send-proposal-action', 'click', function(){
+        console.log('proposing');
+        var proposal = {};
+        proposal.nombre = $('#proposal-form input[name="movie-name"]').val();
+        proposal.duracion = $('#proposal-form input[name="length"]').val();
+        proposal.link = $('#proposal-form input[name="link"]').val();
+
+        // clear fields
+        $('#proposal-form input').val('');
+
+        if (
+            proposal.nombre === '' ||
+            proposal.duracion === '' ||
+            proposal.link === ''
+            ){
+            showNotification('warning', 'Debe completar los campos del formulario', 'topCenter');
+        }else{
+            saveObject(CLASS_PROPUESTA, proposal);
+            showNotification('success', '¡Gracias! Su propuesta ha sido enviada', 'topCenter');
+        }
         return false;
     });
 

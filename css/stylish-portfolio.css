@@ -16,6 +16,10 @@ body, .ui.header, .ui.button {
     font-family: "Raleway","Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
+.ui.form{
+    width: 100%;
+}
+
 .text-vertical-center {
     display: table-cell;
     text-align: center;

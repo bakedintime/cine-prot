@@ -93,27 +93,30 @@
                     </p>
                   </div>
                 </div>
-                <form class="ui form">
-                  <div class="field">
-                    <label>Nombre de la Película</label>
-                    <input type="text" name="movie-name" placeholder="e.g. Avatar">
-                  </div>
-                  <div class="field">
-                    <label>Duración</label>
-                    <input type="text" name="length" placeholder="e.g. 1 hora 20 minutos">
-                  </div>
-                  <div class="ui info message">
+                <form id="proposal-form" class="ui form">
+                    <div class="field">
+                        <label>Nombre de la Película</label>
+                        <input type="text" name="movie-name" placeholder="e.g. Avatar">
+                    </div>
+                    <div class="field">
+                        <label>Duración (minutos)</label>
+                        <input type="number" name="length" placeholder="e.g. 120">
+                    </div>
+                    <div class="ui info message">
                     <div class="header">Link (enlace de la película)</div>
-                    <p>
-                        Esto nos permite encontrar entre películas que tienen un mismo nombre
-                        o tienen un título en otro idioma.
-                    </p>
-                  </div>
-                  <div class="field">
-                    <label>Link</label>
-                    <input type="text" name="link" placeholder="e.g. http://www.imdb.com/title/tt0499549/">
-                  </div>
-                  <button class="ui button" type="submit">Enviar</button>
+                        <p>
+                            Esto nos permite encontrar entre películas que tienen un mismo nombre
+                            o tienen un título en otro idioma.
+                        </p>
+                    </div>
+                    <div class="field">
+                        <label>Link</label>
+                        <input type="text" name="link" placeholder="e.g. http://www.imdb.com/title/tt0499549/">
+                    </div>
+                    <button class="ui blue right floated button send-proposal-action">
+                        <i class="send outline icon"></i>
+                        Enviar Propuesta
+                    </button>
                 </form>
             </div>
         </section>
@@ -208,6 +211,21 @@
                         <button class="ui bottom toggle attached button detail-vote-action" onclick="vote({{:idPelicula}});">Votar</button>
                     </div>
                 {{/for}}
+                <div class="ui dimmer">
+                    <div class="content">
+                        <div class="center">
+                            <h2 class="ui inverted icon header">
+                                <i class="google icon"></i>
+                                Para votar debes ingresar con tu cuenta de Google
+                            </h2>
+                            <br>
+                            <button class="ui inverted basic button" onclick="login()">
+                              <i class="sign in icon"></i>
+                              Ingresar con Google
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         {{else}}
         {{/if}}
@@ -231,6 +249,7 @@
 
     <script src="bower_components/noty/js/noty/layouts/topCenter.js"></script>
 
+    <script src="bower_components/syncano/dist/syncano.min.js"></script>
 
     <!-- Custom Theme JavaScript -->
     <script src="js/main.js"></script>
