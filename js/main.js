@@ -1,11 +1,13 @@
 const CLASS_PROPUESTA = 'propuesta';
 const CLASS_VOTACION = 'votacion';
+const INSTANCE_NAME = 'sparkling-bird-2973';
 
 var prefixAnimations = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
 var votacionCard = $.templates("#votacion-card");
 var detalleVotacionCard = $.templates("#detalle-votacion-card");
 var token;
 var syncanoAccount;
+var votacionesLocalObject = [];
 var basil = new window.Basil({
     namespace: 'cinetir',
     storages: ['cookie', 'local'],
@@ -28,7 +30,7 @@ var connectSyncano = function(){
 }
 
 var saveObject = function(className, doc){
-    syncanoAccount.instance('sparkling-bird-2973').class(className).dataobject().add(doc, function(){
+    syncanoAccount.instance(INSTANCE_NAME).class(className).dataobject().add(doc, function(){
         console.log('added object');
     });
 };
@@ -133,8 +135,15 @@ var vote = function(idPelicula){
     return false;
 };
 
-var getVotacion = function(id){
-    var votacion = {
+var getVotaciones = function(){
+    syncanoAccount.instance(INSTANCE_NAME).class(CLASS_VOTACION).dataobject().list(function(obj){
+        console.log('se obtuvo votaciones', obj);
+        votacionesLocalObject = obj;
+    });
+};
+
+var getVotacion = function(idVotacion){
+    /*var votacion = {
         idVotacion: 1,
         fechaPelicula: '01/06/2016',
         mensaje: 'Vota ya!',
@@ -173,7 +182,8 @@ var getVotacion = function(id){
         ganador: 2,
         totalVotos: 100,
         open: true
-    };
+    };*/
+    var votacion = $.grep(votacionesLocalObject, function(e){ return e.idVotacion == idVotacion; });
     return votacion;
 };
 
@@ -313,6 +323,7 @@ $(function() {
             open: false
         }
     ];
+    getVotaciones();
     var rHtml = votacionCard.render(votaciones);
     $('#votaciones-cards').html(rHtml);
 
