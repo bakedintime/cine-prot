@@ -28,7 +28,6 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-
 </head>
 
 <body>
@@ -149,12 +148,12 @@
                 </div>
             </div>
             {{if open}}
-            <div class="ui bottom attached button vote-action" data-index="{{: idPelicula}}">
+            <div class="ui bottom attached button vote-action" data-index="{{: idVotacion}}">
               <i class="like icon"></i>
               Votar
             </div>
             {{else}}
-            <div class="ui bottom attached button see-results-action" data-index="{{: idPelicula}}">
+            <div class="ui bottom attached button see-results-action" data-index="{{: idVotacion}}">
               <i class="unhide icon"></i>
               Ver Resultados
             </div>
@@ -168,9 +167,25 @@
             <i class="comments outline icon"></i>
             Votación {{: fechaPelicula}}
         </h1>
+        <button class="ui blue inverted top button" onclick="hideDetailView();">Regresar</button>
+        <button class="ui icon blue right floated top button send-vote-action">
+            <i class="send outline icon"></i>
+            Enviar Voto
+        </button>
+        <div class="ui icon message">
+          <i class="help icon"></i>
+          <div class="content">
+            <div class="header">
+              Instrucciones
+            </div>
+            <p>
+                Solamente puedes votar por una película. Al terminar
+                selecciona el botón de <b>Enviar Voto</b>
+            </p>
+          </div>
+        </div>
         {{if open}}
-            <div id="detalle-votacion-cards" class="ui vertical three padded segment cards">
-                <button class="ui blue inverted fluid top button">Regresar</button>
+            <div id="detalle-votacion-cards" class="ui vertical three segment cards">
                 {{for opciones}}
                     <div class="card">
                         <div class="image">
@@ -182,10 +197,17 @@
                                 {{: descripcion}}
                             </div>
                         </div>
-                        <button class="ui bottom toggle attached button" onclick="vote({{:idPelicula}});">Votar</button>
+                        <div class="content">
+                            <div class="left floated meta">
+                              <span>{{: duracion}} minutos</span>
+                            </div>
+                            <div class="right floated meta">
+                              <span>{{: genero}}</span>
+                            </div>
+                        </div>
+                        <button class="ui bottom toggle attached button detail-vote-action" onclick="vote({{:idPelicula}});">Votar</button>
                     </div>
                 {{/for}}
-                <button class="ui blue fluid bottom button">Guardar</button>
             </div>
         {{else}}
         {{/if}}
@@ -202,6 +224,13 @@
     <script src="bower_components/basil.js/build/basil.min.js"></script>
 
     <script src="bower_components/hello/dist/hello.all.js"></script>
+
+    <script src="bower_components/noty/js/noty/jquery.noty.js"></script>
+
+    <script src="bower_components/noty/js/noty/themes/relax.js"></script>
+
+    <script src="bower_components/noty/js/noty/layouts/topCenter.js"></script>
+
 
     <!-- Custom Theme JavaScript -->
     <script src="js/main.js"></script>

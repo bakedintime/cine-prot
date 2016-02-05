@@ -15,11 +15,22 @@ var initHello = function(){
     });
 };
 
+var showNotification = function(type, message, layout){
+    var n = noty({
+        text        : message,
+        type        : type,
+        dismissQueue: true,
+        layout      : layout,
+        theme       : 'relax',
+        closeWith   : ['button', 'click'],
+        maxVisible  : 10
+    });
+};
+
 var checkAuthentication = function(){
     if (basil.get('auth-id') !== null){
         return true;
     }else{
-        hello('google').login();
         return false;
     }
 };
@@ -46,9 +57,22 @@ var interval = function(func, wait, times){
 var hideMainView = function(){
     $('.main-view').addClass('animated fadeOutUp');
     $('.main-view').one(prefixAnimations, function(){
+        $('.main-view').removeClass('animated fadeOutUp');
         $('.detail-view').show();
         $('.main-view').hide();
         $('.detail-view').addClass('animated slideInDown');
+        $('.detail-view').one(prefixAnimations, function(){
+            $('.detail-view').removeClass('animated slideInDown');
+            // if user not logged in dimm content and show log in with 
+            // google 
+            if (!checkAuthentication()){
+                $('#detalle').addClass('blurring');
+                $('#detalle-votacion-cards').addClass('dimmer inverted');
+            }else{
+                $('#detalle').removeClass('blurring');
+                $('#detalle-votacion-cards').removeClass('dimmer inverted');
+            }
+        });
     });
     return false;
 };
@@ -56,40 +80,58 @@ var hideMainView = function(){
 var hideDetailView = function(){
     $('.detail-view').addClass('animated fadeOutUp');
     $('.detail-view').one(prefixAnimations, function(){
+        $('.detail-view').removeClass('animated fadeOutUp');
         $('.main-view').show();
         $('.detail-view').hide();
         $('.main-view').addClass('animated slideInDown');
+        $('.main-view').one(prefixAnimations, function(){
+            $('.main-view').removeClass('animated slideInDown');
+        });
     });
 };
 
-var vote = function(id){
+var vote = function(idPelicula){
+    var btn = this;
+    $('.ui.toggle.button.active').text('Votar');
+    $('.ui.toggle.button.active').removeClass('active');
+    $(this).addClass('active');
+    $('.send-vote-action').attr('data-selected-id', idPelicula);
     return false;
 };
 
 var getVotacion = function(id){
     var votacion = {
-        idPelicula: 1,
+        idVotacion: 1,
         fechaPelicula: '01/06/2016',
         mensaje: 'Vota ya!',
         opciones: [
             {
+                idPelicula: 5,
                 nombre: "Mov1",
                 link: "http://www.google.com",
                 imagen: "http://placehold.it/150x150",
+                duracion: "111",
+                genero: "Acción",
                 descripcion: "Pelicula agradable",
                 votos: 14
             },
             {
+                idPelicula: 6,
                 nombre: "Mov2",
                 link: "http://www.google.com",
                 imagen: "http://placehold.it/150x150",
+                duracion: "111",
+                genero: "Acción",
                 descripcion: "Pelicula clásica",
                 votos: 50
             },
             {
+                idPelicula: 7,
                 nombre: "Mov3",
                 link: "http://www.google.com",
                 imagen: "http://placehold.it/150x150",
+                duracion: "111",
+                genero: "Acción",
                 descripcion: "Pelicula nueva",
                 votos: 36
             }
@@ -100,7 +142,6 @@ var getVotacion = function(id){
     };
     return votacion;
 };
-
 
 // Closes the sidebar menu
 $("#menu-close").click(function(e) {
@@ -160,6 +201,22 @@ $(function() {
         return false;
     });
 
+    $('body').delegate('.send-vote-action', 'click', function(){
+        var btn = this;
+        var idPelicula = $(btn).attr('data-selected-id');
+        if (idPelicula == undefined){
+            showNotification('information', 'Selecciona una de las películas!', 'topCenter');
+        }
+        $(btn).addClass('loading');
+        console.log(idPelicula);
+        setTimeout(function(){
+            $(btn).removeClass('loading');
+            showNotification('success', 'Tu voto ya ha sido tomado en cuenta!', 'topCenter');
+        }, 2000);
+        return false;
+    });
+
+
     $('body').delegate('.see-results-action', 'click', function(){
         var id = $(this).attr("data-index");
         var votacion = getVotacion(id);
@@ -172,13 +229,13 @@ $(function() {
     // render votaciones
     var votaciones = [
         {
-            idPelicula: 1,
+            idVotacion: 1,
             fechaPelicula: '01/06/2016',
             mensaje: 'Vota ya!',
             open: true
         },
         {
-            idPelicula: 2,
+            idVotacion: 2,
             fechaPelicula: '08/06/2016',
             mensaje: 'Ya hay resultados',
             open: false
