@@ -1,0 +1,36 @@
+{
+  "name": "CineTIR",
+  "description": "App votaciones de peliculas",
+  "main": "server.js",
+  "authors": [
+    "Joel <jcantoral@tir.com.gt>"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "node",
+    "heroku",
+    "express"
+  ],
+  "homepage": "https://github.com/bakedintime/cine-prot",
+  "moduleType": [
+    "globals"
+  ],
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "animate.css": "~3.5.1",
+    "basil.js": "~0.4.3",
+    "chartist": "~0.9.5",
+    "hello": "~1.10.1",
+    "jsrender": "~0.9.72",
+    "noty": "~2.3.8",
+    "semantic": "semantic-ui#~2.1.8",
+    "syncano": "^0.4.5"
+  }
+}
