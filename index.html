@@ -33,15 +33,31 @@
 <body>
 
     <!-- Navigation -->
-    <a 
+    <button
         id="menu-toggle"
-        href="#"
-        class="ui icon button inverted left floated large main-view"
-        onclick = $('.ui.sidebar').sidebar('toggle');
+        class="ui teal button large"
+        onclick = "$('.ui.sidebar').sidebar('toggle')"
     >
+        <i class="sidebar icon"></i>
         Menu
-    </a>
-    <nav class="ui sidebar inverted vertical menu">
+    </button>
+    <button
+        id="sign-in-toggle"
+        class="ui grey button large"
+        onclick = "login()"
+    >
+        <i class="google plus icon"></i>
+        <img class="ui avatar image" style="display:none">
+        <span class="name-placeholder">Ingresar</span>
+    </button>
+    <div class="ui popup bottom right transition hidden">
+        <div class="ui divided center aligned grid">
+            <div class="column">
+                <div class="ui red inverted button" onclick="logout()">Salir?</div>
+            </div>
+        </div>
+    </div>
+    <nav class="ui sidebar inverted vertical menu" style="padding-top:54px">
         <li class="item">
             <a href="#top" onclick = $('.ui.sidebar').sidebar('toggle'); >Home</a>
         </li>
@@ -54,6 +70,7 @@
     </nav>
 
     <div class="pusher">
+
         <!-- Header -->
         <header id="top" class="top-header">
             <div class="text-vertical-center">
