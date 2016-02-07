@@ -134,6 +134,21 @@
                         <i class="send outline icon"></i>
                         Enviar Propuesta
                     </button>
+                    <div class="ui dimmer">
+                        <div class="content">
+                            <div class="center">
+                                <h2 class="ui inverted icon header">
+                                    <i class="google icon"></i>
+                                    Para enviar tu propuesta debes ingresar con tu cuenta de Google
+                                </h2>
+                                <br>
+                                <button class="ui google plus button" onclick="login()">
+                                  <i class="google plus icon"></i>
+                                  Google Plus
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </form>
             </div>
         </section>
@@ -155,25 +170,35 @@
     <script id="votacion-card" type="text/x-jsrender">
         <div class="ui four card">
             <div class="content">
-                <div class="header">{{: fechaPelicula}}</div>
+                <div class="header">{{: ~formatDate(fecha_pelicula) }}</div>
                 <p></p>
                 {{if open}}
                     <a class="ui green ribbon label">Abierta</a>
                 {{else}}
                     |<a class="ui red ribbon label">Finalizada</a>
                 {{/if}}
+
                 <p></p>
                 <div class="description">
-                    {{: mensaje }}
+                    <p>{{: mensaje }}</p>
+                    {{if ~hasVoted(id)}}
+                        <div class="ui right floated label">
+                            <i class="checkmark icon"></i> Ya has votado
+                        </div>
+                    {{/if}}
                 </div>
             </div>
-            {{if open}}
-            <div class="ui bottom attached button vote-action" data-index="{{: idVotacion}}">
+            <div class="content">
+                <i class="users icon"></i>
+                {{: total_votos}} votos
+            </div>
+            {{if (open && ~hasVoted(id)==false)}}
+            <div class="ui bottom attached button vote-action" data-index="{{: id}}">
               <i class="like icon"></i>
               Votar
             </div>
             {{else}}
-            <div class="ui bottom attached button see-results-action" data-index="{{: idVotacion}}">
+            <div class="ui bottom attached button see-results-action" data-index="{{: id}}">
               <i class="unhide icon"></i>
               Ver Resultados
             </div>
@@ -185,26 +210,29 @@
     <script id="detalle-votacion-card" type="text/x-jsrender">
         <h1 class="ui horizontal divider header">
             <i class="comments outline icon"></i>
-            Votación {{: fechaPelicula}}
+            Votación {{: ~formatDate(fecha_pelicula) }}
         </h1>
-        <button class="ui blue inverted top button" onclick="hideDetailView();">Regresar</button>
-        <button class="ui icon blue right floated top button send-vote-action">
-            <i class="send outline icon"></i>
-            Enviar Voto
-        </button>
-        <div class="ui icon message">
-          <i class="help icon"></i>
-          <div class="content">
-            <div class="header">
-              Instrucciones
-            </div>
-            <p>
-                Solamente puedes votar por una película. Al terminar
-                selecciona el botón de <b>Enviar Voto</b>
-            </p>
-          </div>
+        <div class="meta" style="display:none">
+          <span class="detalle_id_votacion">{{: id}}</span>
         </div>
-        {{if open}}
+        <button class="ui blue inverted top button" onclick="hideDetailView();">Regresar</button>
+        {{if (open && ~hasVoted(id)==false)}}
+            <button class="ui icon blue right floated top button send-vote-action">
+                <i class="send outline icon"></i>
+                Enviar Voto
+            </button>
+            <div class="ui icon message">
+              <i class="help icon"></i>
+              <div class="content">
+                <div class="header">
+                  Instrucciones
+                </div>
+                <p>
+                    Solamente puedes votar por una película. Al terminar
+                    selecciona el botón de <b>Enviar Voto</b>
+                </p>
+              </div>
+            </div>
             <div id="detalle-votacion-cards" class="ui vertical three segment cards">
                 {{for opciones}}
                     <div class="card">
@@ -213,7 +241,7 @@
                         </div>
                         <div class="content">
                             <div class="header">{{: nombre}}</div>
-                            <div class="description">
+                            <div class="description" style="word-wrap:break-word;">
                                 {{: descripcion}}
                             </div>
                         </div>
@@ -225,7 +253,7 @@
                               <span>{{: genero}}</span>
                             </div>
                         </div>
-                        <button class="ui bottom toggle attached button detail-vote-action" onclick="vote({{:idPelicula}});">Votar</button>
+                        <button class="ui bottom toggle attached button detail-vote-action" onclick="vote({{:id}});">Votar</button>
                     </div>
                 {{/for}}
                 <div class="ui dimmer">
@@ -236,15 +264,73 @@
                                 Para votar debes ingresar con tu cuenta de Google
                             </h2>
                             <br>
-                            <button class="ui inverted basic button" onclick="login()">
-                              <i class="sign in icon"></i>
-                              Ingresar con Google
+                            <button class="ui google plus button" onclick="login()">
+                              <i class="google plus icon"></i>
+                              Google Plus
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
-        {{else}}
+        {{else (open && ~hasVoted(id))}}
+            <div class="ui grid">
+                <div class="sixteen wide column">
+                    <div class="ui vertical three segment cards">
+                        {{for opciones}}
+                            <div class="card">
+                                <div class="image">
+                                    <img src="{{: imagen}}">
+                                </div>
+                                <div class="content">
+                                    <div class="header">{{: nombre}}</div>
+                                    <p></p>
+                                    {{if (#parent.parent.data.open && ~isWinner(id))}}
+                                        <a class="ui green ribbon label">Ganando</a>
+                                    {{else (#parent.parent.data.open==0 && ~isWinner(id))}}
+                                        <a class="ui green ribbon label">Ganadora</a>
+                                    {{else (~isWinner(id))==2 }}
+                                        <a class="ui green ribbon label">Empate</a>
+                                    {{/if}}
+                                    <p></p>
+                                    <div class="description" style="word-wrap:break-word;">
+                                        {{: descripcion}}
+                                    </div>
+                                </div>
+                                <div class="content">
+                                    <div class="left floated meta">
+                                      <span>{{: duracion}} minutos</span>
+                                    </div>
+                                    <div class="right floated meta">
+                                      <span>{{: genero}}</span>
+                                    </div>
+                                </div>
+                                <div class="content">
+                                    {{if (#parent.parent.data.open && ~isWinner(id))}}
+                                        <div class="ui green small right floated statistic">
+                                    {{else (#parent.parent.data.open==0 && ~isWinner(id))}}
+                                        <div class="ui green small right floated statistic">
+                                    {{else}}
+                                        <div class="ui grey small right floated statistic">
+                                    {{/if}}
+                                      <div class="label">
+                                        Votos
+                                      </div>
+                                      <div class="value">
+                                        <i class="users icon"></i> {{: votos}}
+                                      </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {{/for}}
+                    </div>
+                </div>
+                <!--<div class="six wide column">
+                    <div class="ui vertical three segment cards">
+                        <canvas id="myChart" width="400" height="400"></canvas>
+                    </div>
+                </div>-->
+            </div>
+        {{else open==false}}
         {{/if}}
     </script>
 
