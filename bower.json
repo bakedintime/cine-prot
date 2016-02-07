@@ -31,6 +31,7 @@
     "jsrender": "~0.9.72",
     "noty": "~2.3.8",
     "semantic": "semantic-ui#~2.1.8",
-    "syncano": "^0.4.5"
+    "syncano": "^0.4.5",
+    "moment": "~2.11.2"
   }
 }
