@@ -213,40 +213,39 @@ var interval = function(func, wait, times){
     setTimeout(interv, wait);
 };
 
-var hideMainView = function(){
-    $('.main-view').addClass('animated fadeOutUp');
-    $('.main-view').one(prefixAnimations, function(){
-        $('.main-view').removeClass('animated fadeOutUp');
-        $('.detail-view').show();
-        $('.main-view').hide();
-        $('.detail-view').addClass('animated slideInDown');
-        $('.detail-view').one(prefixAnimations, function(){
-            $('.detail-view').removeClass('animated slideInDown');
+var hideSectionAndDim = function(hiddenClass, shownClass){
+    $(hiddenClass).addClass('animated fadeOutUp');
+    $(hiddenClass).one(prefixAnimations, function(){
+        $(hiddenClass).removeClass('animated fadeOutUp');
+        $(shownClass).show();
+        $(hiddenClass).hide();
+        $(shownClass).addClass('animated slideInDown');
+        $(shownClass).one(prefixAnimations, function(){
+            $(shownClass).removeClass('animated slideInDown');
             // if user not logged in dimm content and show log in with
             // google
-            if (!checkAuthentication()){
-                $('#dimmer').dimmer('setting', {
-                    closable: false
-                });
-                $('#detalle-votacion-cards').dimmer('show');
-            }else{
-                //$('#detalle').removeClass('blurring');
-                //$('#detalle-votacion-cards').removeClass('dimmer inverted');
+            if (shownClass=='detail-view'){
+                if (!checkAuthentication()){
+                    $('#dimmer').dimmer('setting', {
+                        closable: false
+                    });
+                    $('#detalle-votacion-cards').dimmer('show');
+                }
             }
         });
     });
     return false;
 };
 
-var hideDetailView = function(){
-    $('.detail-view').addClass('animated fadeOutUp');
-    $('.detail-view').one(prefixAnimations, function(){
-        $('.detail-view').removeClass('animated fadeOutUp');
-        $('.main-view').show();
-        $('.detail-view').hide();
-        $('.main-view').addClass('animated slideInDown');
-        $('.main-view').one(prefixAnimations, function(){
-            $('.main-view').removeClass('animated slideInDown');
+var hideSection = function(hiddenClass, shownClass){
+    $(hiddenClass).addClass('animated fadeOutUp');
+    $(hiddenClass).one(prefixAnimations, function(){
+        $(hiddenClass).removeClass('animated fadeOutUp');
+        $(shownClass).show();
+        $(hiddenClass).hide();
+        $(shownClass).addClass('animated slideInDown');
+        $(shownClass).one(prefixAnimations, function(){
+            $(shownClass).removeClass('animated slideInDown');
         });
     });
 };
@@ -462,7 +461,7 @@ $(function() {
             active   : 'Seleccionado'
           }
         });
-        hideMainView();
+        hideSectionAndDim('.main-view', '.detail-view');
         return false;
     });
 
@@ -569,7 +568,7 @@ $(function() {
         $("#detalle").html(rHtml);
 
 
-        hideMainView();
+        hideSectionAndDim('.main-view', '.detail-view');
 
         //buildGraph(votacion.opciones);
 

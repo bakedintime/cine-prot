@@ -215,7 +215,7 @@
         <div class="meta" style="display:none">
           <span class="detalle_id_votacion">{{: id}}</span>
         </div>
-        <button class="ui blue inverted top button" onclick="hideDetailView();">Regresar</button>
+        <button class="ui blue inverted top button" onclick="hideSection('.detail-view', '.main-view');">Regresar</button>
         {{if (open && ~hasVoted(id)==false)}}
             <button class="ui icon blue right floated top button send-vote-action">
                 <i class="send outline icon"></i>
