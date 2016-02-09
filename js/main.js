@@ -2,12 +2,13 @@ var CLASS_PROPUESTA = 'propuesta';
 var CLASS_VOTACION = 'votacion';
 var CLASS_PELICULA = 'pelicula';
 var CLASS_USUARIO_VOTACION = 'usuario_votacion';
+var CLASS_SETTINGS = 'settings';
 var INSTANCE_NAME = 'sparkling-bird-2973';
 
 var prefixAnimations = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
 var votacionCard = $.templates("#votacion-card");
 var detalleVotacionCard = $.templates("#detalle-votacion-card");
-var token;
+var settings;
 var syncanoAccount;
 var votacionesLocalObject = [];
 var peliculasLocalObject = [];
@@ -21,7 +22,7 @@ var resizePopup = function(){$('.ui.popup').css('max-height', $(window).height()
 
 var initHello = function(){
     hello.init({
-        google: '123591056896-tm74unsnde8elshnokbcvb6ujhblj8h7.apps.googleusercontent.com'
+        google: settings.googlekey
     }, {
         redirect_uri: 'templates/redirect.html'
     });
@@ -30,6 +31,95 @@ var initHello = function(){
 var connectSyncano = function(){
     syncanoAccount = new Syncano({
         accountKey: "bba54d3eafd7649c200e2a0867a5837de78adc7a"
+    });
+};
+
+var getSettings = function(){
+
+    connectSyncano();
+    syncanoAccount.instance(INSTANCE_NAME).class(CLASS_SETTINGS).dataobject().list()
+    .then(function(res){
+        settings = res.objects[0];
+
+         // init libraries
+        initHello();
+        hello.on('auth.login', function(auth) {
+
+            if (!checkAuthentication()){
+                // Call user information, for the given network
+                hello(auth.network).api(
+                    '/me',
+                    {
+                        scope: 'email',
+                        force: true
+                    }
+                ).then(function(r) {
+                    // Inject it into the container
+                    console.log('result from oauth callback', auth, r);
+
+                    if ((r.email.indexOf('tir.com.gt') > -1)){
+                        $('#sign-in-toggle .name-placeholder').text(r.name);
+                        $('#sign-in-toggle img').attr('src', r.thumbnail);
+                        $('#sign-in-toggle img').show();
+                        $('#sign-in-toggle i').hide();
+
+                        $('#sign-in-toggle').popup({
+                            hoverable: true,
+                            on: 'click',
+                            onShow: function(){
+                                resizePopup();
+                            },
+                            delay: {
+                              show: 300,
+                              hide: 800
+                            }
+                        });
+
+                        basil.set('auth-id', {
+                            name: r.name,
+                            thumbnail: r.thumbnail,
+                            email: r.email,
+                            id: r.id,
+                            votedFilms: []
+                        });
+
+                        // Mostrar la opción para crear encuestas,
+                        // ver resultados y ver propuestas
+                        var admins = settings.admins.split(',');
+                        console.log(admins, admins.indexOf(r.email));
+                        if (admins.indexOf(r.email) > -1){
+
+                            var item = '<li class="item admin-menu-item">'+
+                                '<i class="lock icon"></i>'+
+                                '<a href="#admin" onclick = "hideSection(\'.main-view\', \'.admin-view\')" > Propuestas</a>'+
+                            '</li>';
+                            $('.menu').append(item);
+                        }
+
+                        window.location.reload();
+                    }else{
+                        showNotification('error', 'Solo puedes participar utilizando un correo de tir.com.gt', 'topCenter');
+                    }
+                });
+            }else{
+                // Mostrar la opción para crear encuestas,
+                // ver resultados y ver propuestas
+                var admins = settings.admins.split(',');
+                var usuario = basil.get('auth-id');
+                console.log(admins, admins.indexOf(usuario.email));
+                if (admins.indexOf(usuario.email) > -1){
+
+                    var item = '<li class="item admin-menu-item">'+
+                        '<i class="lock icon"></i>'+
+                        '<a href="#admin" onclick = "hideSection(\'.main-view\', \'.admin-view\')" > Admin</a>'+
+                    '</li>';
+                    $('.menu').append(item);
+                }
+            }
+        });
+    })
+    .catch(function(error){
+        console.log('Error!', error);
     });
 };
 
@@ -322,58 +412,8 @@ $(function() {
         resizePopup();
     });
 
-    // init libraries
-    initHello();
-    hello.on('auth.login', function(auth) {
-
-        if (!checkAuthentication()){
-            // Call user information, for the given network
-            hello(auth.network).api(
-                '/me',
-                {
-                    scope: 'email',
-                    force: true
-                }
-            ).then(function(r) {
-                // Inject it into the container
-                console.log('result from oauth callback', auth, r);
-
-                if ((r.email.indexOf('tir.com.gt') > -1)){
-                    $('#sign-in-toggle .name-placeholder').text(r.name);
-                    $('#sign-in-toggle img').attr('src', r.thumbnail);
-                    $('#sign-in-toggle img').show();
-                    $('#sign-in-toggle i').hide();
-
-                    $('#sign-in-toggle').popup({
-                        hoverable: true,
-                        on: 'click',
-                        onShow: function(){
-                            resizePopup();
-                        },
-                        delay: {
-                          show: 300,
-                          hide: 800
-                        }
-                    });
-
-                    basil.set('auth-id', {
-                        name: r.name,
-                        thumbnail: r.thumbnail,
-                        email: r.email,
-                        id: r.id,
-                        votedFilms: []
-                    });
-
-                    window.location.reload();
-                }else{
-                    showNotification('error', 'Solo puedes participar utilizando un correo de tir.com.gt', 'topCenter');
-                }
-            });
-        }
-
-    });
-
-    connectSyncano();
+    // get project settings
+    getSettings();
 
     if (checkAuthentication()){
         var settings = basil.get('auth-id');
