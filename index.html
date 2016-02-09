@@ -20,6 +20,7 @@
     <!-- Custom Fonts -->
     <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="bower_components/animate.css/animate.min.css" rel="stylesheet" type="text/css">
+    <link href="js/semantic-ui-daterangepicker/daterangepicker.min.css" rel="stylesheet" type="text/css">
     <link href='https://fonts.googleapis.com/css?family=Raleway:300' rel='stylesheet' type='text/css'>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -214,7 +215,7 @@
         <div class="meta" style="display:none">
           <span class="detalle_id_votacion">{{: id}}</span>
         </div>
-        <button class="ui blue inverted top button" onclick="hideSection('.detail-view', '.main-view');">Regresar</button>
+        <button class="ui blue inverted top button back">Regresar</button>
         {{if (open && ~hasVoted(id)==false)}}
             <button class="ui icon blue right floated top button send-vote-action">
                 <i class="send outline icon"></i>
@@ -354,6 +355,7 @@
 
     <script src="bower_components/syncano/dist/syncano.min.js"></script>
 
+    <script src="js/semantic-ui-daterangepicker/daterangepicker.min.js"></script>
 
     <!-- Custom Theme JavaScript -->
     <script src="js/main.js"></script>

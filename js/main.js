@@ -91,7 +91,7 @@ var getSettings = function(){
 
                             var item = '<li class="item admin-menu-item">'+
                                 '<i class="lock icon"></i>'+
-                                '<a href="#admin" onclick = "hideSection(\'.main-view\', \'.admin-view\')" > Propuestas</a>'+
+                                '<a href="#admin" class="admin-action" > Propuestas</a>'+
                             '</li>';
                             $('.menu').append(item);
                         }
@@ -111,7 +111,7 @@ var getSettings = function(){
 
                     var item = '<li class="item admin-menu-item">'+
                         '<i class="lock icon"></i>'+
-                        '<a href="#admin" onclick = "hideSection(\'.main-view\', \'.admin-view\')" > Admin</a>'+
+                        '<a href="#admin" class="admin-action" > Admin</a>'+
                     '</li>';
                     $('.menu').append(item);
                 }
@@ -213,39 +213,37 @@ var interval = function(func, wait, times){
     setTimeout(interv, wait);
 };
 
-var hideSectionAndDim = function(hiddenClass, shownClass){
-    $(hiddenClass).addClass('animated fadeOutUp');
-    $(hiddenClass).one(prefixAnimations, function(){
-        $(hiddenClass).removeClass('animated fadeOutUp');
-        $(shownClass).show();
-        $(hiddenClass).hide();
-        $(shownClass).addClass('animated slideInDown');
-        $(shownClass).one(prefixAnimations, function(){
-            $(shownClass).removeClass('animated slideInDown');
-            // if user not logged in dimm content and show log in with
-            // google
-            if (shownClass=='detail-view'){
-                if (!checkAuthentication()){
-                    $('#dimmer').dimmer('setting', {
-                        closable: false
-                    });
-                    $('#detalle-votacion-cards').dimmer('show');
-                }
-            }
-        });
+var prepareAdminView = function(){
+    var rHtml = adminViewCard.render(votacionesLocalObject);
+    $('#admin').html(rHtml);
+    $('input[name="daterange"]').daterangepicker({
+        singleDatePicker: true
     });
-    return false;
 };
 
-var hideSection = function(hiddenClass, shownClass){
+var hideSection = function(params){
+    var hiddenClass = params.hiddenClass;
+    var shownClass = params.shownClass;
+    var onHideCallback = params.onHideCallback || false;
+    var onShowCallback = params.onShowCallback || false;
+
     $(hiddenClass).addClass('animated fadeOutUp');
     $(hiddenClass).one(prefixAnimations, function(){
         $(hiddenClass).removeClass('animated fadeOutUp');
         $(shownClass).show();
         $(hiddenClass).hide();
+
+        if (onHideCallback){
+            onHideCallback();
+        }
+
         $(shownClass).addClass('animated slideInDown');
         $(shownClass).one(prefixAnimations, function(){
             $(shownClass).removeClass('animated slideInDown');
+
+            if (onShowCallback){
+                onShowCallback();
+            }
         });
     });
 };
@@ -461,7 +459,21 @@ $(function() {
             active   : 'Seleccionado'
           }
         });
-        hideSectionAndDim('.main-view', '.detail-view');
+
+        var showCallback = function(){
+            if (!checkAuthentication()){
+                $('#dimmer').dimmer('setting', {
+                    closable: false
+                });
+                $('#detalle-votacion-cards').dimmer('show');
+            }
+        };
+        var params = {
+            hiddenClass: '.main-view',
+            shownClass: '.detail-view',
+            onShowCallback: showCallback
+        };
+        hideSection(params);
         return false;
     });
 
@@ -533,6 +545,23 @@ $(function() {
             }
         }
         return false;
+    });
+
+    $('body').delegate('.admin-action', 'click', function(){
+        var params = {
+            hiddenClass: '.main-view',
+            shownClass: '.admin-view',
+            onShowCallback: prepareAdminView
+        };
+        hideSection(params);
+    });
+
+    $('body').delegate('.back', 'click', function(){
+        var params = {
+            hiddenClass: '.detail-view',
+            shownClass: '.main-view'
+        };
+        hideSection(params);
     });
 
 
