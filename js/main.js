@@ -1,3 +1,4 @@
+// "constants"
 var CLASS_PROPUESTA = 'propuesta';
 var CLASS_VOTACION = 'votacion';
 var CLASS_PELICULA = 'pelicula';
@@ -5,9 +6,13 @@ var CLASS_USUARIO_VOTACION = 'usuario_votacion';
 var CLASS_SETTINGS = 'settings';
 var INSTANCE_NAME = 'sparkling-bird-2973';
 
-var prefixAnimations = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+// templates
 var votacionCard = $.templates("#votacion-card");
 var detalleVotacionCard = $.templates("#detalle-votacion-card");
+var adminViewCard = $.templates("#admin-view-card");
+var adminCreateVotingShowOptions = $.templates("#admin-create-voting-show-options");
+
+var prefixAnimations = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
 var settings;
 var syncanoAccount;
 var votacionesLocalObject = [];

@@ -120,7 +120,7 @@
                         <input type="number" min="1" name="length" placeholder="e.g. 120">
                     </div>
                     <div class="ui info message">
-                    <div class="header">Link (enlace de la película)</div>
+                        <div class="header">Link (enlace de la película)</div>
                         <p>
                             Esto nos permite encontrar entre películas que tienen un mismo nombre
                             o tienen un título en otro idioma.
@@ -154,6 +154,8 @@
         </section>
 
         <section id="detalle" class="ui padded container segment detalle detail-view" style="display:none"></section>
+
+        <section id="admin" class="ui padded container segment admin admin-view" style="display:none"></section>
 
         <!-- Footer -->
         <div class="ui black inverted vertical footer segment">
@@ -204,6 +206,113 @@
             </div>
             {{/if}}
           </div>
+        </div>
+    </script>
+
+    <script id="admin-view-card" type="text/x-jsrender">
+        <div class="ui segment agregar-votacion">
+            <h1 class="ui horizontal divider header">
+                <i class="comments outline icon"></i>
+                Crea una nueva votación
+            </h1>
+             <form id="voting-form" class="ui form">
+                    <div class="field">
+                        <label>Mensaje de la votación</label>
+                        <input type="text" name="movie-name" placeholder="e.g. Avatar">
+                    </div>
+                    <div class="field">
+                        <label>Fecha de la película</label>
+                        <input type="text" name="daterange" placeholder="e.g. 01/01/2016">
+                    </div>
+                    <div class="ui info message">
+                        <div class="header">Escoger películas</div>
+                        <p>
+                            Se pueden seleccionar tres películas buscando su nombre en el texto o 
+                            ingresando directamente las características de la película. 
+                            Las películas seleccionadas se muestran en el lado derecho.
+                        </p>
+                    </div>
+                    <h4 class="ui divider"></h4>
+                    <div class="ui two column very relaxed grid">
+                        <div class="column">
+
+                            <div class="ui divider"></div>
+                            <form id="create-movie-form" class="ui form">
+                                <h1 class="ui horizontal divider header">
+                                    <i class="comments outline icon"></i>
+                                    Agregar una película
+                                </h1>
+                                <div class="field">
+                                    <label>Nombre</label>
+                                    <input type="text" name="movie-name" placeholder="e.g. Avatar">
+                                </div>
+                                <div class="field">
+                                    <label>Descripción</label>
+                                    <textarea type="text" name="movie-description" rows="3"></textarea>
+                                </div>
+                                <div class="field">
+                                    <label>Imagen (url)</label>
+                                    <input type="text" name="movie-image" placeholder="e.g. Avatar">
+                                </div>
+                                <div class="field">
+                                    <label>Link de información (url)</label>
+                                    <input type="text" name="movie-url" placeholder="e.g. Avatar">
+                                </div>
+                                <div class="field">
+                                    <label>Duración (minutos)</label>
+                                    <input type="number" min="1" name="movie-length" placeholder="e.g. 111">
+                                </div>
+                                <div class="field">
+                                    <label>Genéro (solamente 1 por ahora)</label>
+                                    <input type="text" name="movie-genre" placeholder="e.g. Acción">
+                                </div>
+                            </form>
+                            <button class="ui red right floated button add-movie-to-options">
+                                <i class="send outline icon"></i>
+                                Agregar a la lista
+                            </button>
+                        </div>
+                        <div class="ui vertical divider"></div>
+                        <div id="create-voting-options" class="column"></div>
+                    </div>
+
+                    <button class="ui red right floated button send-voting-creation">
+                        <i class="send outline icon"></i>
+                        Crear 
+                    </button>
+                </form>
+        </div>
+        <div class="ui segment ver-votaciones"></div>
+        <div class="ui segment ver-propuestas"></div>
+    </script>
+
+    <script id="admin-create-voting-show-options" type="text/x-jsrender">
+        <div class="ui divided items">.
+            {{for opciones}}
+            <div class="item">
+                <div class="image">
+                  <img src="{{: imagen}}">
+                </div>
+                <div class="content">
+                  <a class="header">{{: nombre}}</a>
+                  <div class="meta">
+                    <span class="duracion">{{: duracion}} minutos</span>
+                  </div>
+                  <div class="description">
+                    <p>{{: descripcion}}</p>
+                    </div>
+                    <div class="extra">
+                        <div class="ui label">
+                            {{: genero}}
+                        </div>
+                        <div class="ui label">
+                            <i class="globe icon"></i>
+                            <a href="{{: link}}"> Link</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{/for}}
         </div>
     </script>
 
