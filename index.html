@@ -272,7 +272,7 @@
                     </div>
                 </div>
             </div>
-        {{else (open && ~hasVoted(id))}}
+        {{else ~hasVoted(id)}}
             <div class="ui grid">
                 <div class="sixteen wide column">
                     <div class="ui vertical three segment cards">
@@ -330,7 +330,6 @@
                     </div>
                 </div>-->
             </div>
-        {{else open==false}}
         {{/if}}
     </script>
 
