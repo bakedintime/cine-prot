@@ -133,6 +133,10 @@ hr.small {
     background: none;
 }
 
+.ui.sidebar.menu .item.admin-menu-item{
+    background-color: #db2828;
+}
+
 #menu-toggle {
     z-index: 10000;
     position: fixed;
