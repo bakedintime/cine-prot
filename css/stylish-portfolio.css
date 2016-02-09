@@ -20,6 +20,8 @@ body, .ui.header, .ui.button {
     width: 100%;
 }
 
+.ui.popup{overflow:auto;}
+
 .text-vertical-center {
     display: table-cell;
     text-align: center;
@@ -132,9 +134,24 @@ hr.small {
 }
 
 #menu-toggle {
-    z-index: 7;
+    z-index: 10000;
     position: fixed;
     margin: 10px;
+}
+
+#sign-in-toggle {
+    z-index: 10000;
+    position: fixed;
+    right: 0;
+    margin: 0;
+}
+
+#sign-in-toggle img{
+    -o-box-shadow: 1px 1px 7px #615C5C;
+    -moz-box-shadow: 1px 1px 7px #615C5C;
+    -webkit-box-shadow: 1px 1px 7px #615C5C;
+    box-shadow: 1px 1px 7px #615C5C;
+    margin-right: 10px;
 }
 
 #sidebar-wrapper.active {
