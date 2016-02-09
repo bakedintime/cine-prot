@@ -525,6 +525,8 @@ $(function() {
             if (!checkAuthentication()){
                 $('#proposal-form').dimmer('show');
             }else{
+                var usuario = basil.get('auth-id');
+                proposal.email = usuario.email;
                 saveObject(CLASS_PROPUESTA, proposal);
                 showNotification('success', '¡Gracias! Tu propuesta ha sido enviada', 'topCenter');
                 // clear fields
