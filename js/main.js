@@ -205,6 +205,22 @@ var prepareAdminView = function(){
     $('input[name="daterange"]').daterangepicker({
         singleDatePicker: true
     });
+    $('.tabular.menu .item').tab();
+    // Mostrar las distintas formas de agregar una opción de película
+    // a la votación
+    $('.select-movie-input-type').checkbox();
+    $('.select-movie-input-type').on('click', function(){
+        var selected = $(this).hasClass('checked');
+        if (selected){
+            $('.search-movie-segment').fadeOut({duration: 100});
+            $('.enter-movie-segment').fadeIn();
+            animate($('.enter-movie-segment'), 'fadeIn');
+        }else{
+            $('.enter-movie-segment').fadeOut({duration: 100});
+            $('.search-movie-segment').fadeIn();
+            animate($('.search-movie-segment'), 'fadeIn');
+        }
+    });
 var animate = function(el, animation, onFinishCallback){
     $(el).addClass('animated '+animation);
     $(el).one(prefixAnimations, function(){
