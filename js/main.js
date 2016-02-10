@@ -88,18 +88,7 @@ var getSettings = function(){
                             votedFilms: []
                         });
 
-                        // Mostrar la opción para crear encuestas,
-                        // ver resultados y ver propuestas
-                        var admins = settings.admins.split(',');
-                        console.log(admins, admins.indexOf(r.email));
-                        if (admins.indexOf(r.email) > -1){
-
-                            var item = '<li class="item admin-menu-item">'+
-                                '<i class="lock icon"></i>'+
-                                '<a href="#admin" class="admin-action" > Propuestas</a>'+
-                            '</li>';
-                            $('.menu').append(item);
-                        }
+                        loadAdminOption();
 
                         window.location.reload();
                     }else{
@@ -107,21 +96,13 @@ var getSettings = function(){
                     }
                 });
             }else{
-                // Mostrar la opción para crear encuestas,
-                // ver resultados y ver propuestas
-                var admins = settings.admins.split(',');
-                var usuario = basil.get('auth-id');
-                console.log(admins, admins.indexOf(usuario.email));
-                if (admins.indexOf(usuario.email) > -1){
-
-                    var item = '<li class="item admin-menu-item">'+
-                        '<i class="lock icon"></i>'+
-                        '<a href="#admin" class="admin-action" > Admin</a>'+
-                    '</li>';
-                    $('.menu').append(item);
-                }
+                loadAdminOption();
             }
         });
+
+        if (checkAuthentication()){
+            loadAdminOption();
+        }
     })
     .catch(function(error){
         console.log('Error!', error);
@@ -393,6 +374,22 @@ var getVotacion = function(id_votacion, reverse){
         votacion.opciones = opciones.join(',');
     }
     return votacion;
+};
+
+var loadAdminOption = function(){
+    // Mostrar la opción para crear encuestas,
+    // ver resultados y ver propuestas
+    var admins = settings.admins.split(',');
+    var usuario = basil.get('auth-id');
+
+    if (admins.indexOf(usuario.email) > -1){
+
+        var item = '<li class="item admin-menu-item">'+
+            '<i class="lock icon"></i>'+
+            '<a href="#admin" class="admin-action" > Admin</a>'+
+        '</li>';
+        $('.menu').append(item);
+    }
 };
 
 // Closes the sidebar menu
