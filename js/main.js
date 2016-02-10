@@ -205,6 +205,15 @@ var prepareAdminView = function(){
     $('input[name="daterange"]').daterangepicker({
         singleDatePicker: true
     });
+var animate = function(el, animation, onFinishCallback){
+    $(el).addClass('animated '+animation);
+    $(el).one(prefixAnimations, function(){
+        $(el).removeClass('animated '+animation);
+
+        if (onFinishCallback){
+            onFinishCallback();
+        }
+    });
 };
 
 var hideSection = function(params){
