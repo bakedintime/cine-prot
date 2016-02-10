@@ -155,7 +155,7 @@
 
         <section id="detalle" class="ui padded container segment detalle detail-view" style="display:none"></section>
 
-        <section id="admin" class="ui padded container segment admin admin-view" style="display:none"></section>
+        <section id="admin" class="ui basic segment padded container admin admin-view" style="display:none"></section>
 
         <!-- Footer -->
         <div class="ui black inverted vertical footer segment">
@@ -210,12 +210,18 @@
     </script>
 
     <script id="admin-view-card" type="text/x-jsrender">
-        <div class="ui segment agregar-votacion">
-            <h1 class="ui horizontal divider header">
-                <i class="comments outline icon"></i>
-                Crea una nueva votación
-            </h1>
-             <form id="voting-form" class="ui form">
+        <div class="ui tabular menu">
+            <div class="active item" data-tab="tab-add-votacion"> Crear Votación</div>
+            <div class="item" data-tab="tab-ver-votaciones"> Ver Votaciones</div>
+            <div class="item" data-tab="tab-ver-propuestas"> Ver Propuestas</div>
+        </div>
+        <div class="ui active tab" data-tab="tab-add-votacion">
+            <div class="ui segment clearing agregar-votacion">
+                <h1 class="ui horizontal divider header">
+                    <i class="add square icon"></i>
+                    Crea una nueva votación
+                </h1>
+                <form id="voting-form" class="ui form">
                     <div class="field">
                         <label>Mensaje de la votación</label>
                         <input type="text" name="movie-name" placeholder="e.g. Avatar">
@@ -224,6 +230,8 @@
                         <label>Fecha de la película</label>
                         <input type="text" name="daterange" placeholder="e.g. 01/01/2016">
                     </div>
+                </form>
+                <form class="ui form">
                     <div class="ui info message">
                         <div class="header">Escoger películas</div>
                         <p>
@@ -232,58 +240,86 @@
                             Las películas seleccionadas se muestran en el lado derecho.
                         </p>
                     </div>
-                    <h4 class="ui divider"></h4>
-                    <div class="ui two column very relaxed grid">
+                    <div class="ui form two column very relaxed grid">
                         <div class="column">
-
-                            <div class="ui divider"></div>
-                            <form id="create-movie-form" class="ui form">
-                                <h1 class="ui horizontal divider header">
-                                    <i class="comments outline icon"></i>
-                                    Agregar una película
-                                </h1>
-                                <div class="field">
-                                    <label>Nombre</label>
-                                    <input type="text" name="movie-name" placeholder="e.g. Avatar">
+                            <div class="ui segment">
+                                <div class="field" style="padding-left: 15px">
+                                    <div class="ui toggle checkbox select-movie-input-type">
+                                        <input type="checkbox" tabindex="0" class="hidden">
+                                        <label>Ingresar la película manualmente</label>
+                                    </div>
                                 </div>
-                                <div class="field">
-                                    <label>Descripción</label>
-                                    <textarea type="text" name="movie-description" rows="3"></textarea>
-                                </div>
-                                <div class="field">
-                                    <label>Imagen (url)</label>
-                                    <input type="text" name="movie-image" placeholder="e.g. Avatar">
-                                </div>
-                                <div class="field">
-                                    <label>Link de información (url)</label>
-                                    <input type="text" name="movie-url" placeholder="e.g. Avatar">
-                                </div>
-                                <div class="field">
-                                    <label>Duración (minutos)</label>
-                                    <input type="number" min="1" name="movie-length" placeholder="e.g. 111">
-                                </div>
-                                <div class="field">
-                                    <label>Genéro (solamente 1 por ahora)</label>
-                                    <input type="text" name="movie-genre" placeholder="e.g. Acción">
-                                </div>
-                            </form>
-                            <button class="ui red right floated button add-movie-to-options">
-                                <i class="send outline icon"></i>
-                                Agregar a la lista
-                            </button>
+                            </div>
+                            <div class="search-movie-segment ui basic clearing segment">
+                                <form id="autocomplete-movie-form" class="ui form">
+                                    <div class="field">
+                                        <label>Buscar película con nombre...</label>
+                                        <input type="text" name="movie-name" placeholder="e.g. Avatar">
+                                    </div>
+                                    <div class="field">
+                                        <button class="ui right floated button search-movie-option">
+                                            <i class="search icon"></i>
+                                            Buscar
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="ui basic segment preview"></div>
+                            <div class="enter-movie-segment ui basic segment" style="display:none">
+                                <form id="create-movie-form" class="ui form">
+                                    <h1 class="ui header">
+                                        <i class="film icon"></i>
+                                        Agregar una película
+                                    </h1>
+                                    <div class="field">
+                                        <label>Nombre</label>
+                                        <input type="text" name="movie-name" placeholder="e.g. Avatar">
+                                    </div>
+                                    <div class="field">
+                                        <label>Descripción</label>
+                                        <textarea type="text" name="movie-description" rows="3"></textarea>
+                                    </div>
+                                    <div class="field">
+                                        <label>Imagen (url)</label>
+                                        <input type="text" name="movie-image" placeholder="e.g. Avatar">
+                                    </div>
+                                    <div class="field">
+                                        <label>Link de información (url)</label>
+                                        <input type="text" name="movie-url" placeholder="e.g. Avatar">
+                                    </div>
+                                    <div class="field">
+                                        <label>Duración (minutos)</label>
+                                        <input type="number" min="1" name="movie-length" placeholder="e.g. 111">
+                                    </div>
+                                    <div class="field">
+                                        <label>Genéro (solamente 1 por ahora)</label>
+                                        <input type="text" name="movie-genre" placeholder="e.g. Acción">
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="ui basic clearing segment">
+                                <button class="ui blue right floated button add-movie-to-options">
+                                    <i class="plus square outline icon"></i>
+                                    Agregar a la lista
+                                </button>
+                            </div>
                         </div>
                         <div class="ui vertical divider"></div>
                         <div id="create-voting-options" class="column"></div>
                     </div>
-
-                    <button class="ui red right floated button send-voting-creation">
-                        <i class="send outline icon"></i>
-                        Crear 
-                    </button>
                 </form>
+                <button class="ui clearing red right floated button send-voting-creation">
+                    <i class="send outline icon"></i>
+                    Crear Votación
+                </button>
+            </div>
         </div>
-        <div class="ui segment ver-votaciones"></div>
-        <div class="ui segment ver-propuestas"></div>
+        <div class="ui tab" data-tab="tab-ver-votaciones">
+            <div class="ui segment ver-votaciones"></div>
+        </div>
+        <div class="ui tab" data-tab="tab-ver-propuestas">
+            <div class="ui segment ver-propuestas"></div>
+        </div>
     </script>
 
     <script id="admin-create-voting-show-options" type="text/x-jsrender">
@@ -444,6 +480,7 @@
 
     <!-- jQuery -->
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/jquery-ui/jquery-ui.min.js"></script>
 
     <!-- Semantic UI Core JavaScript -->
     <script src="bower_components/semantic/dist/semantic.min.js"></script>
@@ -461,6 +498,8 @@
     <script src="bower_components/noty/js/noty/layouts/topCenter.js"></script>
 
     <script src="bower_components/moment/moment.js"></script>
+    
+    <script src="bower_components/omdb-client/dist/omdb-client.min.js"></script>
 
     <script src="bower_components/syncano/dist/syncano.min.js"></script>
 

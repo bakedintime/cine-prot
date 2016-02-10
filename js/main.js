@@ -200,6 +200,7 @@ var interval = function(func, wait, times){
 };
 
 var prepareAdminView = function(){
+    var movieOptions = [];
     var rHtml = adminViewCard.render(votacionesLocalObject);
     $('#admin').html(rHtml);
     $('input[name="daterange"]').daterangepicker({
@@ -221,6 +222,76 @@ var prepareAdminView = function(){
             animate($('.search-movie-segment'), 'fadeIn');
         }
     });
+    // Buscar la información de una película
+    $('.search-movie-option').on('click', function(){
+        var params = {
+            title: $('.search-movie-segment input[name="movie-name"]').val()
+        };
+
+        var btn = this;
+        $(btn).addClass('loading');
+        window.omdb.get(params, function(err, data){
+            $(btn).removeClass('loading');
+            if (err == null){
+                var previewOptions = [];
+                var addedMovie = {};
+
+                addedMovie.nombre = data.Title;
+                addedMovie.imagen = data.Poster;
+                addedMovie.genero = data.Genre;
+                addedMovie.descripcion = data.Plot;
+                addedMovie.duracion = data.Runtime.replace('min', '');
+                addedMovie.link = 'http://www.imdb.com/title/'+data.imdbID;
+
+                previewOptions.push(addedMovie);
+                movieOptions.push(addedMovie);
+
+                var rHtml = adminCreateVotingShowOptions.render({
+                    opciones: previewOptions
+                });
+                $('.preview').html(rHtml);
+            }else{
+                showNotification('warning', 'Revisar que el nombre de la película esté bien escrito', 'topCenter');
+            }
+        });
+        return false;
+    });
+    // Mover opciones de la creación a la columna de preview
+    $('.add-movie-to-options').on('click', function(){
+        if (movieOptions.length >= 3){
+            showNotification('warning', 'Solamente se permiten 3 opciones por votación', 'topCenter');
+            return false;
+        }
+        var inputMode = $(this).hasClass('checked') ? 'automatic' : 'manual';
+        
+        // En la búsqueda automática ya se ha agregado 
+        // la película con anterioridad al array movieOptions
+        if (inputMode=='manual'){
+            var addedMovie = {};
+
+            addedMovie.nombre = $('#create-movie-form input[name="movie-name"]').val();
+            addedMovie.descripcion = $('#create-movie-form textarea[name="movie-description"]').val();
+            addedMovie.imagen = $('#create-movie-form input[name="movie-image"]').val();
+            addedMovie.link = $('#create-movie-form input[name="movie-link"]').val();
+            addedMovie.duracion = $('#create-movie-form input[name="movie-length"]').val();
+            addedMovie.genero = $('#create-movie-form input[name="movie-genre"]').val();
+            
+            movieOptions.push(addedMovie);
+            $('#create-movie-form input').val('');
+            $('#create-movie-form textarea').val('');
+        }else {
+            $('.search-movie-segment input[name="movie-name"]').val('');
+            $('.preview').html('');
+        }
+
+        var rHtml = adminCreateVotingShowOptions.render({
+            opciones: movieOptions
+        });
+        $('#create-voting-options').html(rHtml);
+        return false;
+    });
+};
+
 var animate = function(el, animation, onFinishCallback){
     $(el).addClass('animated '+animation);
     $(el).one(prefixAnimations, function(){
