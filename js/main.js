@@ -562,7 +562,7 @@ $(function() {
         var params = {
             hiddenClass: '.main-view',
             shownClass: '.admin-view',
-            onShowCallback: prepareAdminView
+            onHideCallback: prepareAdminView
         };
         hideSection(params);
     });
