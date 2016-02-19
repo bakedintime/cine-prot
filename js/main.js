@@ -694,8 +694,11 @@ $(function() {
         );
         $("#detalle").html(rHtml);
 
-
-        hideSectionAndDim('.main-view', '.detail-view');
+        var params = {
+            hiddenClass: '.main-view',
+            shownClass: '.detail-view'
+        };
+        hideSection(params);
 
         //buildGraph(votacion.opciones);
 
