@@ -402,12 +402,19 @@ var getVotaciones = function(){
         "query": {"email":{"_eq": email }}
     };
 
+    var filterVotacion = {
+        "orderBy": {
+            "open": 'desc',
+            "fecha_pelicula": 'desc'
+        }
+    };
+
     syncanoAccount.instance(INSTANCE_NAME).class(CLASS_USUARIO_VOTACION).dataobject().list(filter, function(){})
     .then(function(res){
         votacionesUsuariosLocalObject = res.objects;
         //console.log("obtained usuario_votacion.", res);
 
-        syncanoAccount.instance(INSTANCE_NAME).class(CLASS_VOTACION).dataobject().list()
+        syncanoAccount.instance(INSTANCE_NAME).class(CLASS_VOTACION).dataobject().list(filterVotacion, function(){})
         .then(function(res){
             votacionesLocalObject = res.objects;
 
