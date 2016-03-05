@@ -310,7 +310,7 @@ var hideSection = function(params){
     var onShowCallback = params.onShowCallback || false;
 
     $(hiddenClass).addClass('animated fadeOutUp');
-    $(hiddenClass).one(prefixAnimations, function(){
+    $(hiddenClass).unbind().one(prefixAnimations, function(){
         $(hiddenClass).removeClass('animated fadeOutUp');
         $(shownClass).show();
         $(hiddenClass).hide();
@@ -320,7 +320,7 @@ var hideSection = function(params){
         }
 
         $(shownClass).addClass('animated slideInDown');
-        $(shownClass).one(prefixAnimations, function(){
+        $(shownClass).unbind().one(prefixAnimations, function(){
             $(shownClass).removeClass('animated slideInDown');
 
             if (onShowCallback){
