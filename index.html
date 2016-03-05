@@ -194,7 +194,7 @@
                 <i class="users icon"></i>
                 {{: total_votos}} votos
             </div>
-            {{if (open && ~hasVoted(id)==false)}}
+            {{if ((open && ~hasVoted(id)==false) || (open && ~checkAuthentication()==false))}}
             <div class="ui bottom attached button vote-action" data-index="{{: id}}">
               <i class="like icon"></i>
               Votar
@@ -417,7 +417,7 @@
                     </div>
                 </div>
             </div>
-        {{else ~hasVoted(id)}}
+        {{else (~hasVoted(id)) || (open == false && ~checkAuthentication()==false)}}
             <div class="ui grid">
                 <div class="sixteen wide column">
                     <div class="ui vertical three segment cards">

@@ -420,6 +420,9 @@ var getVotaciones = function(){
                     hasVoted: function(id_votacion){
                         var exists = $.grep(votacionesUsuariosLocalObject, function(e){ return e.id_votacion == id_votacion; });
                         return (exists.length > 0)
+                    },
+                    checkAuthentication: function(){
+                        return checkAuthentication();
                     }
                 }
             );
@@ -547,6 +550,9 @@ $(function() {
                 hasVoted: function(id_votacion){
                     var exists = $.grep(votacionesUsuariosLocalObject, function(e){ return e.id_votacion == id_votacion; });
                     return (exists.length > 0)
+                },
+                checkAuthentication: function(){
+                    return checkAuthentication();
                 }
             }
         );
@@ -565,6 +571,7 @@ $(function() {
                 });
                 $('#detalle-votacion-cards').dimmer('show');
             }
+            return false;
         };
         var params = {
             hiddenClass: '.main-view',
@@ -671,6 +678,9 @@ $(function() {
             {
                 formatDate: function(dateObj){
                     return moment(dateObj.value, moment.ISO_8601).format('DD/MM/Y');
+                },
+                checkAuthentication: function(){
+                    return checkAuthentication();
                 },
                 hasVoted: function(id_votacion){
                     var exists = $.grep(votacionesUsuariosLocalObject, function(e){ return e.id_votacion == id_votacion; });
